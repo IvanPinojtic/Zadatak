@@ -1,0 +1,40 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<OmegaAppZadatak2.Models.Contact>
+
+<div id="tbl-div">
+    <table id="tbl-contacts" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Grad</th>
+                <th>Opis</th>
+                <th>Brojevi</th>
+                <th>Opcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(contact.Ime, "Details", new { id = contact.Id })</td>
+                    <td>@Html.ActionLink(contact.Prezime, "Details", new { id = contact.Id })</td>
+                    <td>@contact.Grad</td>
+                    <td>@contact.Opis</td>
+                    <td>@Html.Raw(string.Join(";", contact.Numbers.Select(s => string.Format("<span>{0}</span>", s.Number))))</td>
+                    <td>
+                        @Html.ActionLink("Uredi", "Edit", new { id = contact.Id })
+                        <a href="javascript:void(0);" onclick="deleteContact(this, @contact.Id)">Obriši</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div id="contentPager">
+        @Html.PagedListPager(Model,
+       page => Url.Action("Table", new { page }),
+       PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions
+       { HttpMethod = "GET", UpdateTargetId = "tbl-div" }))
+    </div>
+</div>

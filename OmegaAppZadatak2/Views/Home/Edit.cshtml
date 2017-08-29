@@ -1,0 +1,15 @@
+﻿﻿﻿@model OmegaAppZadatak2.Models.Contact
+@{
+    ViewBag.Title = "Uređivanje kontakta";
+}
+<ol class="breadcrumb">
+    <li>@Html.ActionLink("Pregled kontakata", "Index")</li>
+    <li class="active">Uređivanje kontakta @Model.Ime @Model.Prezime</li>
+</ol>
+<h2>Uređivanje kontakta</h2>
+@using (Html.BeginForm("Edit","Home",FormMethod.Post,new { enctype = "multipart/form-data" }))
+{
+    <text>
+        @Html.Partial("_CreateOrEdit")
+    </text>
+}

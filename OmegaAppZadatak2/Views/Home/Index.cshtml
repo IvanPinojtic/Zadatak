@@ -1,0 +1,71 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<OmegaAppZadatak2.Models.Contact>
+@{
+    ViewBag.Title = "Početna";
+}
+
+<div class="panel panel-heading">
+    <div class="row">
+        <div class="col-xs-8">
+            <h2>Pregled kontakata</h2>
+        </div>
+        <div class="col-xs-4 text-right">
+            <a href="@Url.Action("Create")" style="margin-top: 20px;" class="btn btn-success">Novi kontakt</a>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_ContactFilter", new OmegaAppZadatak2.Models.ContactFilterModel())
+
+<hr />
+
+@Html.Partial("_IndexTable", Model)
+
+@section scripts{
+    <style type="text/css">
+        table.table tr.bold {
+            font-weight: bold;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $(".contacts-filter .submit-button").on("click", function () {
+                $.ajax({
+                    url: '@Url.Action("IndexAjax")',
+                    method: "POST",
+                    data: $(this).closest('form').serialize(),
+                    success: function (data) {
+                        $("#tbl-div").replaceWith(data);
+                    }
+                });
+            });
+        });
+
+       $(function () {
+           $(document).on("click", "#contentPager a[href]", function () {
+               $.ajax({
+                   url: $(this).attr("href"),
+                   type: 'GET',
+                   cache: false,
+                   success: function (result) {
+                       $('#tbl-div').html(result);
+                   }
+               });
+               return false;
+           });
+       });
+
+        function deleteContact(link, id) {
+            $.ajax({
+                url: '@Url.Action("Delete")',
+                data: { id : id },
+                success: function (data) {
+                    if (data == "OK") {
+                        $(link).closest('tr').remove();
+                    }
+                }
+            });
+        }
+        
+    </script>
+}
